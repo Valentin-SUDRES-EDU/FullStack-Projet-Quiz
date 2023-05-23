@@ -184,6 +184,40 @@ class Question:
 		question_count = cur.fetchone()[0]
 
 		return question_count
+
+
+	def GetQuestions():
+		db_connection = sqlite3.connect('./db.db')
+		db_connection.row_factory = sqlite3.Row
+
+		cur = db_connection.cursor()
+
+		cur.execute("SELECT * FROM Question")
+		question_rows = cur.fetchall()
+
+		questions = []
+		for question_row in question_rows:
+			question_id = question_row["id"]
+			cur.execute(f"SELECT * FROM Reponse WHERE question_id=?", (question_id,))
+			answer_rows = cur.fetchall()
+
+			question = Question(
+				position=question_row["position"],
+				title=question_row["title"],
+				text=question_row["text"],
+				image=question_row["image"],
+				possible_answers=[
+					{
+						"text": answer_row["text"],
+						"isCorrect": bool(answer_row["isCorrect"])
+					}
+					for answer_row in answer_rows
+				]
+			)
+
+			questions.append(question.to_json())
+
+		return json.dumps(questions)
 	
 
 	def GetQuestionByID(question_id: int):

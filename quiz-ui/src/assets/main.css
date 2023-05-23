@@ -1,11 +1,30 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
   padding: 2rem;
 
+  height: 100vh;
+  width: 100%;
+
   font-weight: normal;
+
+  background: rgb(0, 0, 10);
+  background: linear-gradient(180deg, rgba(0, 0, 10, 1) 0%, rgba(0, 0, 150, 1) 100%);
+}
+
+h1 {
+  font-size: 40px;
+  font-weight: bolder;
+  margin-bottom: 2vh;
+}
+
+main {
+  margin: auto;
+  background-color: white;
+  width: 80%;
+  min-height: 30vh;
+  max-height: 80vh;
+  padding: 5vh;
 }
 
 a,
@@ -13,6 +32,12 @@ a,
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
   transition: 0.4s;
+}
+
+.content {
+  width: 100%;
+  max-height: 60vh;
+  overflow: auto;
 }
 
 @media (hover: hover) {

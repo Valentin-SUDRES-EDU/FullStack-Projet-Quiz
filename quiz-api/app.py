@@ -40,7 +40,26 @@ def InitializeDefaultQuestions():
 	except ValueError:
 		return {"error": ValueError}, 402
 
-	return {"id": value}, 200
+	return "Ok", 200
+
+@app.route('/repopulate-default', methods=['POST'])
+def ReInitializeDefaultQuestions():
+	try:
+		TestConnection(request)
+	except ValueError:
+		return 'Unauthorized', 401
+	
+	try:
+		value = Question.ReInitialize()
+	except ValueError:
+		return {"error": ValueError}, 402
+
+	try:
+		value = Question.PopulateQuiz()
+	except ValueError:
+		return {"error": ValueError}, 402
+
+	return "Ok", 200
 
 
 @app.route('/quiz-info', methods=['GET'])
@@ -63,11 +82,28 @@ def GetQuizInfo():
 def Login():
 	payload = request.get_json()
 
-	hashed = hashlib.md5(payload['password'].encode('UTF-8')).digest()
-	if hashed == b'\xebC\xbb\xd3 \x89p\xa7\x9ef\xae\x15z\x8d3\x96':
-		return {"token": build_token()}, 200
+	try:
+		hashed = hashlib.md5(payload['password'].encode('UTF-8')).digest()
+		if hashed == b'\xebC\xbb\xd3 \x89p\xa7\x9ef\xae\x15z\x8d3\x96':
+			return {"token": build_token()}, 200
+		else:
+			return 'Unauthorized', 401
+	except:
+		return {"error": ValueError}, 402
+	
+
+@app.route('/questions/all', methods=['GET'])
+def RecupererQuestions():
+
+	try:
+		value = Question.GetQuestions()
+	except ValueError:
+		return {"error": ValueError}, 402
+
+	if value == None:
+		return {"error": "No questions found"}, 404
 	else:
-		return 'Unauthorized', 401
+		return value, 200
 	
 
 @app.route('/questions/<int:question_id>', methods=['GET'])

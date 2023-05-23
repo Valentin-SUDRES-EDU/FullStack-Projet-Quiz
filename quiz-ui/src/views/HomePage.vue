@@ -1,18 +1,28 @@
 <template>
-  <h1>Home</h1>
+  <main>
+    <h1>Home</h1>
 
-  <router-link to="/start-new-quiz-page">Démarrer le quiz !</router-link>
 
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Score</th>
-    </tr>
-    <tr v-for="scoreEntry in this.registeredScores.scores" v-bind:key="scoreEntry.date">
-      <td>{{ scoreEntry.playerName }}</td>
-      <td>{{ scoreEntry.score }}</td>
-    </tr>
-  </table>
+
+    <router-link to="/start-new-quiz-page">Démarrer le quiz !</router-link>
+
+    <div class="content" v-if="this.registeredScores.scores.length > 0">
+      Les Meilleurs Scores
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Score</th>
+        </tr>
+        <tr v-for="scoreEntry in this.registeredScores.scores" v-bind:key="scoreEntry.date">
+          <td>{{ scoreEntry.playerName }}</td>
+          <td>{{ scoreEntry.score }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="content" v-else>
+      Aucune participation... pour le moment. Soyez le premier à participer !
+    </div>
+  </main>
 </template>
 
 <script>
@@ -38,12 +48,6 @@ export default {
 </script>
 
 <style>
-h1 {
-  font-size: 40px;
-  font-weight: bolder;
-  margin-bottom: 2vh;
-}
-
 table {
   border: 2px solid black;
   border-collapse: collapse;
