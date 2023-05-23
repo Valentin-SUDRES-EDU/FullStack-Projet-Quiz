@@ -47,7 +47,7 @@ export default {
           this.authenticated = true;
           this.token = res.data.token;
           QuizApiService.token = this.token;
-          this.created();
+          this.GetAllQuestions();
 
         } else {
           alert('Invalid password');
@@ -57,7 +57,7 @@ export default {
       }
     },
 
-    async created() {
+    async GetAllQuestions() {
       try {
         const res = await QuizApiService.getAllQuestions();
         if (res.status === 200) {
@@ -87,6 +87,7 @@ export default {
         const res = await QuizApiService.resetQuestions();
         if (res.status === 200) {
           alert('Questions successfully reseted');
+          this.GetAllQuestions();
         } else {
           alert('Unable to Reset Questions! Error: ' + res.data);
         }
@@ -99,6 +100,7 @@ export default {
         const res = await QuizApiService.resetEverything();
         if (res.status === 200) {
           alert('Everything successfully deleted');
+          this.questions = []
         } else {
           alert('Unable to Reset Everything! Error: ' + res.data);
         }

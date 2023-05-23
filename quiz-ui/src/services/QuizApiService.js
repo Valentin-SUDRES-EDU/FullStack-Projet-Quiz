@@ -54,7 +54,7 @@ export default {
   resetQuestions() {
     return this.call("post", "repopulate-default");
   },
-  ResetEverything() {
+  resetEverything() {
     return this.call("post", "rebuild-db");
   }
 
