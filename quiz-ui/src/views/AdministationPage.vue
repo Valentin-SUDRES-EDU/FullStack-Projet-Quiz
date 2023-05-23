@@ -11,10 +11,15 @@
         <ul>
           <li v-for="(question, index) in this.questions" :key="index" class="question">
             <img :src="question.image" alt="Image de la question">
-            <h2>{{ question.title }}</h2>
-            <p>{{ question.text }}</p>
-            <button @click="editQuestion(index)">Modifier</button>
-            <button @click="deleteQuestion(index)">Supprimer</button>
+            <div class="question-card-text">
+              <h2>{{ question.title }}</h2>
+              <p>{{ question.text }}</p>
+            </div>
+            <div class="question-card-actions">
+              <button @click="editQuestion(index)">Modifier</button>
+              <button @click="deleteQuestion(index)">Supprimer</button>
+            </div>
+
           </li>
         </ul>
       </div>
@@ -118,4 +123,54 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.question {
+  display: flex;
+  flex-direction: row;
+  height: 100px;
+  margin-bottom: 5px;
+  border: 1px solid gray;
+}
+
+.question:nth-child(2n) {
+  background-color: lightgray;
+}
+
+.question img {
+  height: 100px;
+  width: 100px;
+}
+
+.question-card-text {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+
+.question-card-text h2 {
+  font-size: 15px;
+  height: 50px;
+  line-height: 50px;
+  margin: 0;
+}
+
+.question-card-text p {
+  height: 50%;
+  font-size: 15px;
+  margin: 0;
+  line-height: 50px;
+}
+
+.question-card-actions {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.question-card-actions button {
+  height: 50%;
+  width: 50px;
+  overflow: hidden;
+}
+</style>

@@ -1,19 +1,16 @@
 <template>
   <main>
     <h1>Home</h1>
-
-
-
     <router-link to="/start-new-quiz-page">Démarrer le quiz !</router-link>
 
-    <div class="content" v-if="this.registeredScores.scores.length > 0">
+    <div class="content" v-if="this.registeredScores.length > 0">
       Les Meilleurs Scores
       <table>
         <tr>
           <th>Name</th>
           <th>Score</th>
         </tr>
-        <tr v-for="scoreEntry in this.registeredScores.scores" v-bind:key="scoreEntry.date">
+        <tr v-for="scoreEntry in this.registeredScores" v-bind:key="scoreEntry.date">
           <td>{{ scoreEntry.playerName }}</td>
           <td>{{ scoreEntry.score }}</td>
         </tr>
@@ -39,7 +36,7 @@ export default {
   async created() {
     try {
       const response = await QuizApiService.getQuizInfo();
-      this.registeredScores = response.data;
+      this.registeredScores = response.data.scores;
     } catch (error) {
       console.error(error);
     }

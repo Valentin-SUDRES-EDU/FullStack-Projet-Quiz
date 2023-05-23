@@ -69,7 +69,6 @@ export default {
         playerName: this.playerName,
         answers: this.playerAnswers,
       };
-      console.log(iData);
       try {
         const response = await QuizApiService.submitQuiz(iData);
         alert(`Votre score est de ${response.data.score} !`);
