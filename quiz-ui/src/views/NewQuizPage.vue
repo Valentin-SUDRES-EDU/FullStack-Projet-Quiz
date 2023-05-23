@@ -1,4 +1,6 @@
 <template>
+  <h1>Quiz</h1>
+
   <div>
     <div v-if="beginQuiz">
       <form @submit.prevent="startQuiz">
@@ -78,3 +80,11 @@ export default {
   },
 };
 </script>
+
+<style>
+h1 {
+  font-size: 40px;
+  font-weight: bolder;
+  margin-bottom: 2vh;
+}
+</style>

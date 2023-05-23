@@ -39,6 +39,139 @@ class Question:
 		return question
 	
 
+	def ReInitialize():
+		db_connection = sqlite3.connect('./db.db')
+
+		cur = db_connection.cursor()
+
+		cur.execute("begin")
+
+		cur.execute("""DROP TABLE IF EXISTS AnsweredQuestions""")
+		cur.execute("""DROP TABLE IF EXISTS Participation""")
+		cur.execute("""DROP TABLE IF EXISTS User""")
+		cur.execute("""DROP TABLE IF EXISTS Reponse""")
+		cur.execute("""DROP TABLE IF EXISTS Question""")
+
+		cur.execute("""CREATE TABLE "Question" (
+			"id"	INTEGER NOT NULL DEFAULT 1 UNIQUE,
+			"position"	INTEGER NOT NULL DEFAULT 1 UNIQUE,
+			"title"	TEXT NOT NULL,
+			"text"	TEXT NOT NULL,
+			"image"	TEXT NOT NULL,
+			PRIMARY KEY("id" AUTOINCREMENT)
+		)""")
+
+		cur.execute("""CREATE TABLE "Reponse" (
+			"id"	INTEGER NOT NULL UNIQUE,
+			"question_id"	INTEGER NOT NULL,
+			"text"	TEXT NOT NULL,
+			"isCorrect"	INTEGER NOT NULL,
+			FOREIGN KEY("question_id") REFERENCES "Question"("id"),
+			PRIMARY KEY("id" AUTOINCREMENT)
+		)""")
+
+		cur.execute("""CREATE TABLE "User" (
+			"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			"name" TEXT NOT NULL
+		)""")
+
+		cur.execute("""CREATE TABLE "Participation" (
+			"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			"user_id" INTEGER,
+			"date" TEXT NOT NULL,
+			FOREIGN KEY("user_id") REFERENCES "User"("id")
+		)""")
+
+		cur.execute("""CREATE TABLE "AnsweredQuestions" (
+			"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			"participation_id" INTEGER,
+			"question_id" INTEGER,
+			"response_id" INTEGER,
+			FOREIGN KEY("participation_id") REFERENCES "Participation"("id"),
+			FOREIGN KEY("question_id") REFERENCES "Question"("id"),
+			FOREIGN KEY("response_id") REFERENCES "Reponse"("id")
+		)""")
+
+		cur.execute("commit")
+
+	def PopulateQuiz():
+		db_connection = sqlite3.connect('./db.db')
+		db_connection.row_factory = sqlite3.Row
+
+		cur = db_connection.cursor()
+
+		cur.execute("begin")
+
+		cur.execute("""INSERT INTO "Question" ("position", "title", "text", "image") VALUES 
+		(1, "a", "Combien d'étoiles la Voie Lactée abrite-t-elle ?", "a"),
+		(2, "a", "Qu'est-ce que UY Scuti ?", "a"),
+		(3, "a", "Combien de temps prend le Soleil pour orbiter autour de la Voie Lactée ?", "a"),
+		(4, "a", "Quel est le phénomène physique impliqué dans la lente perte de masse des trous noirs ?", "a"),
+		(5, "a", "En 2019, une équipe internationale photographiait pour la première fois un trou noir. Comment s'appelle ce trou noir ?", "a"),
+		(6, "a", "Qu'est ce qu'un Magnétar ?", "a"),
+		(7, "a", "Quelle comète est représentée sur la tapisserie de Bayeux ?", "a"),
+		(8, "a", "Qu'est ce que la limite de Roche ?", "a"),
+		(9, "a", "Quel est le nom d'une mégastructure hypothétique qui permettrait de capturer l'énergie d'une étoile ?", "a"),
+		(10, "a", "Qu'est ce qu'un sursaut gamma ?", "a")
+		""")
+
+
+		cur.execute("""INSERT INTO "Reponse" ("question_id", "text", "isCorrect") VALUES 
+
+		(1, "Entre 100.000 et 200.000", 0),
+		(1, "Entre 100 et 400 millions", 0),
+		(1, "Entre 1 et 2 milliards", 0),
+		(1, "Entre 200 et 400 milliards", 1),
+		
+		(2, "La neuvième planète du Système Solaire", 0),
+		(2, "Un satellite de Jupiter", 0),
+		(2, "Une galaxie hélicoïdale", 0),
+		(2, "Une des plus grosses étoiles connues", 1),
+
+		(3, "365 jours", 0),
+		(3, "1 000 ans", 0),
+		(3, "250 millions d'années", 1),
+		(3, "2 milliards d'années", 0),
+
+		(4, "La relativité d'Einstein", 0),
+		(4, "Le rayonnement de Hawking", 1),
+		(4, "L'écoulement de Bernoulli", 0),
+		(4, "La thermodynamique de Thomson", 0),
+
+		(5, "M87*", 1),
+		(5, "Sagittarius A*", 0),
+		(5, "TON 618", 0),
+		(5, "Cygnus X-3", 0),
+
+		(6, "Une structure théorique permettant, grâce à d'immenses aimants, de déplacer une étoile", 0),
+		(6, "Les restes d'une étoile massive, pivotant sur elle même à grande vitesse", 1),
+		(6, "Un des appareils expérimentaux créés dans le but d'étudier le champ magnétique terrestre", 0),
+		(6, "Une exoplanète majoritairement formée de matériaux ferreux", 0),
+
+		(7, "La comète de Hale-Bopp", 0),
+		(7, "La comète Neowise", 0),
+		(7, "La comète de Halley", 1),
+		(7, "La comète Oumuamua", 0),
+
+		(8, "La distance minimale à laquelle un satellite naturel serait détruit par le corps céleste autour duquel il orbite", 1),
+		(8, "La masse critique au dessus de laquelle un corps céleste devient une planète tellurique", 0),
+		(8, "La distance maximale d'une planète tellurique à son étoile la plus proche", 0),
+		(8, "La taille limite d'un astéroïde afin qu'il ne cause pas d'évènement d'extinction de l'espèce", 0),
+
+		(9, "L'Etoile de la Mort", 0),
+		(9, "Cylindre O'Neill", 0),
+		(9, "Sphère de Dyson", 1),
+		(9, "Sphère de Bernal", 0),
+
+		(10, "Une manière de détecter une planète orbitant autour d'une étoile", 0),
+		(10, "Un mécanisme permettant de photographier l'univers profond", 0),
+		(10, "Une explosion stellaire parmi les évènements les plus violents de notre univers", 1),
+		(10, "Une technologie développée pour l'observation spatiale, désormais utilisée en médecine classique", 0)
+		
+		""")
+
+		cur.execute("commit")
+
 	# --- Getting Question ---
 
 	def GetQuestionsCount():

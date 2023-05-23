@@ -1,11 +1,18 @@
 <template>
-  <h1>Home page</h1>
-
-  <div v-for="scoreEntry in this.registeredScores.scores" v-bind:key="scoreEntry.date">
-    {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-  </div>
+  <h1>Home</h1>
 
   <router-link to="/start-new-quiz-page">Démarrer le quiz !</router-link>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Score</th>
+    </tr>
+    <tr v-for="scoreEntry in this.registeredScores.scores" v-bind:key="scoreEntry.date">
+      <td>{{ scoreEntry.playerName }}</td>
+      <td>{{ scoreEntry.score }}</td>
+    </tr>
+  </table>
 </template>
 
 <script>
@@ -30,4 +37,43 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+h1 {
+  font-size: 40px;
+  font-weight: bolder;
+  margin-bottom: 2vh;
+}
+
+table {
+  border: 2px solid black;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+tr {
+  height: 25px;
+}
+
+tr:nth-of-type(2) {
+  background: gold;
+}
+
+tr:nth-of-type(3) {
+  background: silver;
+}
+
+tr:nth-of-type(4) {
+  background: #cd7f32;
+}
+
+th {
+  font-weight: bold;
+  color: white;
+  background-color: black;
+}
+
+td {
+  width: 100px;
+  border: 1px solid black;
+}
+</style>

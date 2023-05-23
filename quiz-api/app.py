@@ -14,6 +14,35 @@ def hello_world():
 	x = 'world'
 	return f"Hello, {x}"
 
+@app.route('/rebuild-db', methods=['POST'])
+def ReInitializeDatabase():
+	try:
+		TestConnection(request)
+	except ValueError:
+		return 'Unauthorized', 401
+
+	try:
+		value = Question.ReInitialize()
+	except ValueError:
+		return {"error": ValueError}, 402
+
+	return "Ok", 200
+
+@app.route('/populate-default', methods=['POST'])
+def InitializeDefaultQuestions():
+	try:
+		TestConnection(request)
+	except ValueError:
+		return 'Unauthorized', 401
+
+	try:
+		value = Question.PopulateQuiz()
+	except ValueError:
+		return {"error": ValueError}, 402
+
+	return {"id": value}, 200
+
+
 @app.route('/quiz-info', methods=['GET'])
 def GetQuizInfo():
 	
@@ -169,13 +198,13 @@ def recordParticipation():
 
 	question_count = Question.GetQuestionsCount()
 
-	if answers is None:
-		raise ValueError("No answers provided")
-
-	if len(answers) != question_count:
-		raise ValueError("Wrong number of answers provided. Expected {}, got {}".format(question_count, len(answers)))
-
 	try:
+		if answers is None:
+			raise ValueError("No answers provided")
+
+		if len(answers) != question_count:
+			raise ValueError("Wrong number of answers provided. Expected {}, got {}".format(question_count, len(answers)))
+
 		score = Participation.SaveParticipation(playerName, answers)
 	except ValueError:
 		return {"error": ValueError}, 402
