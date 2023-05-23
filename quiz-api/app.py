@@ -167,6 +167,14 @@ def recordParticipation():
 	playerName = data.get("playerName")
 	answers = data.get("answers")
 
+	question_count = Question.GetQuestionsCount()
+
+	if answers is None:
+		raise ValueError("No answers provided")
+
+	if len(answers) != question_count:
+		raise ValueError("Wrong number of answers provided. Expected {}, got {}".format(question_count, len(answers)))
+
 	try:
 		score = Participation.SaveParticipation(playerName, answers)
 	except ValueError:
