@@ -227,7 +227,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .question {
   display: flex;
   flex-direction: row;
