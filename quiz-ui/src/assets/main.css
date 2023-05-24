@@ -16,6 +16,18 @@ h1 {
   color: rgb(0, 0, 140);
 }
 
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+label {
+  color: black;
+  text-align: justify;
+}
+
 main {
   margin: auto;
   background-color: white;
