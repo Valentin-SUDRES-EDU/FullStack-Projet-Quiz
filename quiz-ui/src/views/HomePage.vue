@@ -19,9 +19,9 @@
             </tr>
           </table>
         </div>
-        <div class="content" v-else>
+        <p v-else>
           Aucune participation... pour le moment. Soyez le premier à participer !
-        </div>
+        </p>
       </div>
     </div>
   </main>
