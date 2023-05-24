@@ -5,7 +5,7 @@
     <div class="content" v-if="beginQuiz">
       <form class="prompt" @submit.prevent="startQuiz">
         <label for="playerName">Entrez votre nom :</label>
-        <input v-model="playerName" type="text" id="playerName" required />
+        <input v-model="playerName" type="text" id="playerName" required placeholder="Nom" />
         <button type="submit">Commencer le Quiz</button>
       </form>
     </div>

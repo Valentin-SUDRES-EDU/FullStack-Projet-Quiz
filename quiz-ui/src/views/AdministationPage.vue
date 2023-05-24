@@ -10,19 +10,21 @@
       <h2>Manage Questions</h2>
       <edit-question-modal v-if="questionToEdit" :question="questionToEdit" @save="saveQuestion"
         @close="questionToEdit = null" />
-      <div>
+      <div class="questionList">
         <ul>
-          <li draggable="true" v-for="(question, index) in this.questions" :key="index" class="question">
-            <img draggable="false" :src="question.image" alt="Image de la question">
-            <div draggable="false" class="question-card-text">
-              <h2 draggable="false">Question {{ question.position }} - {{ question.title }}</h2>
-              <p draggable="false">{{ question.text }}</p>
+          <li v-for="(question, index) in this.questions" :key="index" class="question">
+            <img :src="question.image" alt="Image de la question">
+            <div class="question-card-text">
+              <h2>Question {{ question.position }} - {{ question.title }}</h2>
+              <p>{{ question.text }}</p>
             </div>
-            <div draggable="false" class="question-card-actions">
-              <button draggable="false" @click="editQuestion(question)"><img draggable="false"
-                  src="./../assets/img/Button_Edit.png" alt="edit question button"></button>
-              <button draggable="false" @click="deleteQuestion(question)"><img draggable="false"
-                  src="./../assets/img/Button_Erase.png" alt="delete question button"></button>
+            <div class="question-card-actions">
+              <button @click="editQuestion(question)">
+                <img draggable="false" src="./../assets/img/Button_Edit.png" alt="edit question button">
+              </button>
+              <button @click="deleteQuestion(question)">
+                <img draggable="false" src="./../assets/img/Button_Erase.png" alt="delete question button">
+              </button>
             </div>
           </li>
         </ul>
@@ -229,6 +231,15 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+  margin: 20px auto;
+}
+
+.questionList {
+  overflow: auto;
+  max-height: 40vh;
+}
+
 .question {
   display: flex;
   flex-direction: row;
