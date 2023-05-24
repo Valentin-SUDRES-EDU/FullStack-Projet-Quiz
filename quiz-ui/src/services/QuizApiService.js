@@ -26,7 +26,7 @@ export default {
         return { status: response.status, data: response.data };
       })
       .catch((error) => {
-        console.error(error);
+        return { status: error.response.status, data: error.response.data };
       });
   },
 
@@ -43,6 +43,9 @@ export default {
     return this.call("post", "participations", iData);
   },
 
+  addQuestion(question) {
+    return this.call("post", "questions", question);
+  },
   editQuestion(position, question) {
     return this.call("put", "questions/" + position, question);
   },
