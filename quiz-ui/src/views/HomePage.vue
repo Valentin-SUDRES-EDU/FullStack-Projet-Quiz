@@ -3,6 +3,7 @@
     <h1>Accueil</h1>
     <div>
       <div>
+        <p>Ce quiz va vous faire voyager aux confins de l'univers. Êtes-vous prêt à voguer sur l'horizon des événements d'un trou noir super-massif ? Réussirez-vous à atteindre une lointaine lune glacée orbitant dans les anneaux d'une géante gazeuse ? Saurez-vous résoudre les plus grandes énigmes de l'astrophysique moderne ? </p>
         <router-link id="startQuizz" to="/start-new-quiz-page">Démarrer le quiz !</router-link>
       </div>
       <div>
@@ -59,6 +60,7 @@ main div div {
   width: 50%
 }
 
+
 a {
   vertical-align: baseline;
   width: 100%;
@@ -81,46 +83,57 @@ a:hover {
   background: linear-gradient(-90deg, rgba(161, 139, 7, 0.5) 0%, rgba(0, 142, 171, 0.5) 100%);
 }
 
+
+
 #scores {
   width: 100%;
   display: block;
 }
 
 #scores table {
-  border: 2px solid black;
+  
   border-collapse: collapse;
   text-align: center;
   margin: auto;
+  background: rgb(233, 233, 233);
+  border-radius: 15px;
 }
 
 #scores p {
   text-align: center;
+  font-size: 30px;
+  font-weight: bolder;
 }
 
-tr {
+#scores tr {
   height: 25px;
+  font-size: 18px;
+  border-bottom: 2px solid white;
 }
 
-tr:nth-of-type(2) {
-  background: gold;
+#scores tr:nth-of-type(2) {
+  background-color: gold;
 }
 
-tr:nth-of-type(3) {
-  background: silver;
+
+#scores tr:nth-of-type(3) {
+  background-color: silver; 
 }
 
-tr:nth-of-type(4) {
-  background: #cd7f32;
-}
+#scores tr:nth-of-type(4) {
+  background-color: rgb(212, 106, 0);
+} 
 
-th {
+#scores th {
   font-weight: bold;
   color: white;
   background-color: black;
 }
 
-td {
+#scores td {
   width: 100px;
-  border: 1px solid black;
+  font-size: 20px;
+  
 }
+
 </style>
