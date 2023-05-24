@@ -1,7 +1,8 @@
 <template>
   <main>
     <h1>Admin Panel</h1>
-    <div class="content" v-if="!authenticated">
+    <div class="content prompt" v-if="!authenticated">
+      <label for="playerName">Entrez le mot de passe :</label>
       <input type="password" v-model="password" placeholder="Password">
       <button @click="login">Login</button>
     </div>
