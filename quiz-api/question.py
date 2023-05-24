@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import base64
 
 class Question:
 	def __init__(self, position, title, text, image, possible_answers):
@@ -94,6 +95,13 @@ class Question:
 
 		cur.execute("commit")
 
+	def image_to_data_url(filename):
+		ext = filename.split('.')[-1]
+		prefix = f'data:image/{ext};base64,'
+		with open(filename, 'rb') as f:
+			img = f.read()
+		return prefix + base64.b64encode(img).decode('utf-8')
+
 	def PopulateQuiz():
 		db_connection = sqlite3.connect('./db.db')
 		db_connection.row_factory = sqlite3.Row
@@ -103,42 +111,68 @@ class Question:
 		cur.execute("begin")
 
 		cur.execute("""INSERT INTO "Question" ("position", "title", "text", "image") VALUES 
-		(1, "Voie Lactée", "Combien d'étoiles la Voie Lactée abrite-t-elle ?", "a"),
+		(1, "Voie Lactée", "Combien d'étoiles la Voie Lactée abrite-t-elle ?", ? ),
 
-		(2, "Soleil", "Combien de temps prend le Soleil pour orbiter autour de la Voie Lactée ?", "a"),
-		(3, "Soleil", "À quelle classe d'étoile appartient le Soleil?", "a"),
-		(4, "Soleil", "Quel élément chimique est le composant majeur du Soleil?", "a"),
+		(2, "Soleil", "Combien de temps prend le Soleil pour orbiter autour de la Voie Lactée ?", ? ),
+		(3, "Soleil", "À quelle classe d'étoile appartient le Soleil?", ? ),
+		(4, "Soleil", "Quel élément chimique est le composant majeur du Soleil?", ? ),
 
-		(5, "Trous noirs", "Quel est le phénomène physique impliqué dans la lente perte de masse des trous noirs ?", "a"),
-		(6, "Trous noirs", "En 2019, une équipe internationale photographiait pour la première fois un trou noir. Comment s'appelle ce trou noir ?", "a"),
+		(5, "Trous noirs", "Quel est le phénomène physique impliqué dans la lente perte de masse des trous noirs ?", ? ),
+		(6, "Trous noirs", "En 2019, une équipe internationale photographiait pour la première fois un trou noir. Comment s'appelle ce trou noir ?", ? ),
 
-		(7, "Définition", "Qu'est ce qu'un Magnétar ?", "a"),
-		(8, "Définition", "Qu'est ce que la limite de Roche ?", "a"),
-		(9, "Définition", "Quel est le nom d'une mégastructure hypothétique qui permettrait de capturer l'énergie d'une étoile ?", "a"),
-		(10, "Définition", "Qu'est ce qu'un sursaut gamma ?", "a"),
-		(11, "Définition", "L'Année-Lumière sert à mesurer :", "a"),
-		(12, "Définition", "Quel évènement produit une supernova?", "a"),
-		(13, "Définition", "Qu'est ce que le verrouillage gravitationnel ?", "a"),
+		(7, "Définition", "Qu'est ce qu'un Magnétar ?", ? ),
+		(8, "Définition", "Qu'est ce que la limite de Roche ?", ? ),
+		(9, "Définition", "Quel est le nom d'une mégastructure hypothétique qui permettrait de capturer l'énergie d'une étoile ?", ? ),
+		(10, "Définition", "Qu'est ce qu'un sursaut gamma ?", ? ),
+		(11, "Définition", "L'Année-Lumière sert à mesurer :", ? ),
+		(12, "Définition", "Quel évènement produit une supernova?", ? ),
+		(13, "Définition", "Qu'est ce que le verrouillage gravitationnel ?", ? ),
 
-		(14, "Distance", "Quelle est la distance Terre-Lune, 50000km près ?", "a"),
-		(15, "Distance", "Combien de temps met la lumière du soleil à nous parvenir ?", "a"),
+		(14, "Distance", "Quelle est la distance Terre-Lune, 50000km près ?", ? ),
+		(15, "Distance", "Combien de temps met la lumière du soleil à nous parvenir ?", ?),
 
-		(16, "Satellite", "Qui a découvert Titan, un satellite de Saturne ?", "a"),
-		(17, "Satellite", "Quels sont les noms des satellites galiléens de Jupiter  ?", "a"),
-		(18, "Satellite", "Quel satellite de Saturne sépare son anneau A et son anneau B ?", "a"),
-		(19, "Satellite", "Quel est le nom du plus gros satellite de Pluton ?", "a"),
+		(16, "Satellite", "Qui a découvert Titan, un satellite de Saturne ?", ? ),
+		(17, "Satellite", "Quels sont les noms des satellites galiléens de Jupiter  ?", ? ),
+		(18, "Satellite", "Quel satellite de Saturne sépare son anneau A et son anneau B ?", ? ),
+		(19, "Satellite", "Quel est le nom du plus gros satellite de Pluton ?", ? ),
 
-		(20, "Grandeur", "Quelle est la taille de Jupiter par rapport à la Terre ?", "a"),
+		(20, "Grandeur", "Quelle est la taille de Jupiter par rapport à la Terre ?", ? ),
 
-		(21, "Exploration spatiale", "Quelle sonde est actuellement la plus éloignée de la Terre ?", "a"),
-		(22, "Exploration spatiale", "Quel est le dernier homme à avoir marché sur la Lune (en 2023) ?", "a"),
+		(21, "Exploration spatiale", "Quelle sonde est actuellement la plus éloignée de la Terre ?", ? ),
+		(22, "Exploration spatiale", "Quel est le dernier homme à avoir marché sur la Lune (en 2023) ?", ? ),
 
-		(23, "Comète", "Quelle comète est représentée sur la tapisserie de Bayeux ?", "a"),
+		(23, "Comète", "Quelle comète est représentée sur la tapisserie de Bayeux ?", ? ),
 
-		(24, "Etoiles", "Qu'est-ce que UY Scuti ?", "a"),
-		(25, "Etoiles", "Quelle est l'étoile la plus proche de notre système solaire ?", "a")
+		(24, "Etoiles", "Qu'est-ce que UY Scuti ?", ? ),
+		(25, "Etoiles", "Quelle est l'étoile la plus proche de notre système solaire ?", ? )
 
-		""")
+		""", (
+			Question.image_to_data_url("src/img/q1.jpg"),
+   			Question.image_to_data_url("src/img/q2.jpg"),
+			Question.image_to_data_url("src/img/q3.png"),
+			Question.image_to_data_url("src/img/q4.jpg"),
+			Question.image_to_data_url("src/img/q5.jpg"),
+			Question.image_to_data_url("src/img/q6.jpg"),
+			Question.image_to_data_url("src/img/q7.jpg"),
+			Question.image_to_data_url("src/img/q8.jpg"),
+			Question.image_to_data_url("src/img/q9.jpg"),
+			Question.image_to_data_url("src/img/q10.jpg"),
+			Question.image_to_data_url("src/img/q11.jpg"),
+			Question.image_to_data_url("src/img/q12.jpg"),
+			Question.image_to_data_url("src/img/q13.jpg"),
+			Question.image_to_data_url("src/img/q14.jpg"),
+			Question.image_to_data_url("src/img/q15.jpg"),
+			Question.image_to_data_url("src/img/q16.jpg"),
+			Question.image_to_data_url("src/img/q17.jpg"),
+			Question.image_to_data_url("src/img/q18.jpg"),
+			Question.image_to_data_url("src/img/q19.jpg"),
+			Question.image_to_data_url("src/img/q20.jpg"),
+			Question.image_to_data_url("src/img/q21.jpg"),
+			Question.image_to_data_url("src/img/q22.jpg"),
+			Question.image_to_data_url("src/img/q23.jpg"),
+			Question.image_to_data_url("src/img/q24.jpg"),
+			Question.image_to_data_url("src/img/q25.jpg"),
+		))
 
 
 		cur.execute("""INSERT INTO "Reponse" ("question_id", "text", "isCorrect") VALUES 
