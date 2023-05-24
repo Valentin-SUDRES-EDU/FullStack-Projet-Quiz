@@ -134,7 +134,7 @@ export default {
 
           this.addNotification('Connection Réussie', '', 'validation');
         } else {
-          this.addNotification('Impossible de se connecter', 'Erreur: ' + res.data.error, 'erreur');
+          this.addNotification('Impossible de se connecter', 'Erreur: ' + res.data, 'erreur');
         }
       } catch (error) {
         console.error(error);
@@ -320,6 +320,11 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  float: left;
+  width: 70%;
+}
+
 .disconnectButton {
   width: 20%;
   float: right;
