@@ -149,7 +149,7 @@ class Question:
 		""", (
 			Question.image_to_data_url("src/img/q1.jpg"),
    			Question.image_to_data_url("src/img/q2.jpg"),
-			Question.image_to_data_url("src/img/q3.png"),
+			Question.image_to_data_url("src/img/q3.jpg"),
 			Question.image_to_data_url("src/img/q4.jpg"),
 			Question.image_to_data_url("src/img/q5.jpg"),
 			Question.image_to_data_url("src/img/q6.jpg"),
