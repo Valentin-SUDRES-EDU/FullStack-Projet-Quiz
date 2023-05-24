@@ -1,13 +1,13 @@
 <template>
   <main>
-    <h1>Admin Panel</h1>
+    <h1>Panel d'Administration</h1>
     <div class="content prompt" v-if="!authenticated">
       <label for="playerName">Entrez le mot de passe :</label>
       <input type="password" v-model="password" placeholder="Password">
       <button @click="login">Login</button>
     </div>
     <div class="content" v-else>
-      <h2>Manage Questions</h2>
+      <h2>Gestion des Questions</h2>
       <edit-question-modal v-if="questionToEdit" :question="questionToEdit" @save="saveQuestion"
         @close="questionToEdit = null" />
       <div class="questionList">
@@ -30,10 +30,10 @@
         </ul>
       </div>
 
-      <h2>Manage Data</h2>
-      <button @click="ResetParticipation">Reset Participation</button>
-      <button @click="RevertQuestions">Revert Changes to Questions</button>
-      <button @click="ResetEverything">Reset All</button>
+      <h2>Gestion des Données</h2>
+      <button @click="ResetParticipation">Supprimer les participations</button>
+      <button @click="RevertQuestions">Remettre les questions par défaut</button>
+      <button @click="ResetEverything">Tout supprimer</button>
     </div>
   </main>
 

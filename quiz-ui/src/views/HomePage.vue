@@ -1,6 +1,6 @@
 <template>
   <main>
-    <h1>Home</h1>
+    <h1>Accueil</h1>
     <div>
       <div>
         <router-link id="startQuizz" to="/start-new-quiz-page">Démarrer le quiz !</router-link>
