@@ -13,7 +13,7 @@ class JwtError(Exception):
 
 
 secret = "soleil chaud petit pluie"
-expiration_in_seconds = 3600
+expiration_in_seconds = 7200
 
 
 def build_token():

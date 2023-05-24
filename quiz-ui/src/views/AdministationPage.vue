@@ -1,6 +1,10 @@
 <template>
   <main>
-    <h1>Panel d'Administration</h1>
+    <Notification :notifications="notifications" />
+    <div>
+      <h1>Panel d'Administration</h1>
+      <button v-if="authenticated" @click="disconnect" class="disconnectButton">Se Déconnecter</button>
+    </div>
     <div class="content prompt" v-if="!authenticated">
       <label for="playerName">Entrez le mot de passe :</label>
       <input type="password" v-model="password" placeholder="Password">
@@ -83,6 +87,7 @@
 
 <script>
 import QuizApiService from "@/services/QuizApiService";
+import Notification from '@/components/Notification.vue'
 
 export default {
 
@@ -95,8 +100,13 @@ export default {
       questionToEdit: null,
       originalQuestion: null,
       correctAnswerIndex: null,
-      isAddingQuestion: false
+      isAddingQuestion: false,
+      notifications: [],
     }
+  },
+
+  components: {
+    Notification
   },
 
   created() {
@@ -112,6 +122,7 @@ export default {
   methods: {
 
     async login() {
+      this.addNotification('Connexion en cours...', '', 'neutre');
       try {
         const res = await QuizApiService.login({ "password": this.password });
         if (res.status === 200) {
@@ -119,14 +130,38 @@ export default {
           this.token = res.data.token;
           QuizApiService.token = this.token;
           this.GetAllQuestions();
-
           window.sessionStorage.setItem('token', this.token);
+
+          this.addNotification('Connection Réussie', '', 'validation');
         } else {
-          alert('Invalid password');
+          this.addNotification('Impossible de se connecter', 'Erreur: ' + res.data.error, 'erreur');
         }
       } catch (error) {
         console.error(error);
       }
+    },
+
+    disconnect() {
+      this.addNotification('Déconnexion...', '', 'neutre');
+      this.token = null;
+      window.sessionStorage.removeItem('token');
+      QuizApiService.token = this.token;
+      location.reload();
+
+      this.addNotification('Déconnection Réussie', '', 'validation');
+    },
+
+    addNotification(titre, texte, type) {
+      this.notifications.push({
+        titre: titre,
+        texte: texte,
+        type: type,
+        id: Date.now()
+      });
+
+      setTimeout(() => {
+        this.notifications.shift();
+      }, 5000);
     },
 
     async GetAllQuestions() {
@@ -134,8 +169,10 @@ export default {
         const res = await QuizApiService.getAllQuestions();
         if (res.status === 200) {
           this.questions = res.data;
+        } else if (res.status === 401) {
+          this.disconnect();
         } else {
-          alert('Unable to Get Questions! Error: ' + res.data.error);
+          alert('Unable to Get Questions!', 'Erreur: ' + res.data.error, 'erreur');
         }
       } catch (error) {
         console.error(error);
@@ -143,12 +180,15 @@ export default {
     },
 
     async ResetParticipation() {
+      this.addNotification('Suppression des participations', '', 'neutre');
       try {
         const res = await QuizApiService.deleteParticipants();
         if (res.status === 204) {
-          alert('Participation successfully deleted');
+          this.addNotification('Participations supprimées avec succès', '', 'validation');
+        } else if (res.status === 401) {
+          this.disconnect();
         } else {
-          alert('Unable to Reset Participation! Error: ' + res.data.error);
+          this.addNotification('Impossible de supprimer les participations !', 'Erreur: ' + res.data.error, 'erreur');
         }
       } catch (error) {
         console.error(error);
@@ -156,30 +196,38 @@ export default {
     },
 
     async RevertQuestions() {
+      this.addNotification('Restauration des questions par défaut...', '', 'neutre');
       try {
         const res = await QuizApiService.resetQuestions();
         if (res.status === 200) {
-          alert('Questions successfully reseted');
+          this.addNotification('Restauration des questions par défaut effectuée', '', 'validation');
           this.GetAllQuestions();
+        } else if (res.status === 401) {
+          this.disconnect();
         } else {
-          alert('Unable to Reset Questions! Error: ' + res.data.error);
+          this.addNotification('Impossible de restaurer les questions par défaut !', 'Erreur: ' + res.data.error, 'erreur');
         }
       } catch (error) {
         console.error(error);
+        this.addNotification('Impossible de remettre les questions par défaut !', '', 'erreur');
       }
     },
 
     async ResetEverything() {
+      this.addNotification('Remise à zéro...', '', 'neutre');
       try {
         const res = await QuizApiService.resetEverything();
         if (res.status === 200) {
-          alert('Everything successfully deleted');
+          this.addNotification('Remise à zéro effectuée', '', 'validation');
           this.questions = []
+        } else if (res.status === 401) {
+          this.disconnect();
         } else {
-          alert('Unable to Reset Everything! Error: ' + res.data.error);
+          this.addNotification('Impossible de remettre tout à zéro !', 'Erreur: ' + res.data.error, 'erreur');
         }
       } catch (error) {
         console.error(error);
+        this.addNotification('Impossible de remettre tout à zéro !', '', 'erreur');
       }
     },
 
@@ -224,16 +272,21 @@ export default {
 
       let res;
       if (this.originalQuestion) {
+        this.addNotification('Modification de la question en cours', '', 'neutre');
         res = await QuizApiService.editQuestion(this.originalQuestion.position, this.questionToEdit);
       } else {
+        this.addNotification("Ajout d'une nouvelle question", '', 'neutre');
         res = await QuizApiService.addQuestion(this.questionToEdit);
       }
 
       if (res.status === 200 || res.status === 204) {
-        alert(this.originalQuestion ? 'Question Updated' : 'Question Created');
+        this.addNotification(this.originalQuestion ? 'Question modifiée' : 'Question ajoutée', '', 'validation');
         this.close();
         this.GetAllQuestions();
+      } else if (res.status === 401) {
+        this.disconnect();
       } else {
+        this.addNotification(this.originalQuestion ? 'Impossible de modifier la question...' : "Impossible d'ajouter la question...", 'Erreur: ' + res.data.error, 'erreur');
         alert('Unable to update or create question! Error: ' + res.data.error);
       }
       this.isAddingQuestion = false;
@@ -246,15 +299,19 @@ export default {
     },
 
     async deleteQuestion(question) {
+      this.addNotification('Suppression de la question en cours', '', 'neutre');
       try {
         const res = await QuizApiService.deleteQuestion(question.position);
         if (res.status === 204) {
-          alert('Question Deleted');
+          this.addNotification('Question supprimée', '', 'validation');
           this.GetAllQuestions();
+        } else if (res.status === 401) {
+          this.disconnect();
         } else {
-          alert('Unable to delete question! Error: ' + res.data.error);
+          this.addNotification('Impossible de supprimer la question...', 'Erreur: ' + res.data.error, 'erreur');
         }
       } catch (error) {
+        this.addNotification('Impossible de supprimer la question...', '', 'erreur');
         console.error(error);
       }
     }
@@ -263,6 +320,11 @@ export default {
 </script>
 
 <style scoped>
+.disconnectButton {
+  width: 20%;
+  float: right;
+}
+
 h2 {
   margin: 20px auto;
 }
