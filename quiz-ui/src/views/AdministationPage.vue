@@ -9,15 +9,25 @@
       <h2>Manage Questions</h2>
       <div>
         <ul>
-          <li v-for="(question, index) in this.questions" :key="index" class="question">
-            <img :src="question.image" alt="Image de la question">
-            <div class="question-card-text">
-              <h2>{{ question.title }}</h2>
-              <p>{{ question.text }}</p>
+          <li draggable="true" v-for="(question, index) in this.questions" :key="index" class="question">
+            <img draggable="false" :src="question.image" alt="Image de la question">
+            <div draggable="false" class="question-card-text">
+              <h2 draggable="false">Question {{ question.position }} - {{ question.title }}</h2>
+              <p draggable="false">{{ question.text }}</p>
             </div>
-            <div class="question-card-actions">
-              <button @click="editQuestion(index)">Modifier</button>
-              <button @click="deleteQuestion(index)">Supprimer</button>
+            <div draggable="false" class="question-card-actions">
+              <button draggable="false" @click="editQuestion(question)"><img draggable="false"
+                  src="./../assets/img/Button_Edit.png" alt="edit question button"></button>
+              <button draggable="false" @click="deleteQuestion(question)"><img draggable="false"
+                  src="./../assets/img/Button_Erase.png" alt="delete question button"></button>
+            </div>
+            <div draggable="false" class="question-card-actions">
+              <button v-if="index > 0" draggable="false" @click="moveQuestionUp(question)">
+                <img draggable="false" src="./../assets/img/Button_ArrowUp.png" alt="move question up button">
+              </button>
+              <button v-if="index < questions.length - 1" draggable="false" @click="moveQuestionDown(question)">
+                <img draggable="false" src="./../assets/img/Button_ArrowDown.png" alt="move question down button">
+              </button>
             </div>
 
           </li>
@@ -68,7 +78,7 @@ export default {
         if (res.status === 200) {
           this.questions = res.data;
         } else {
-          alert('Unable to Get Questions! Error: ' + res.data);
+          alert('Unable to Get Questions! Error: ' + res.data.error);
         }
       } catch (error) {
         console.error(error);
@@ -81,7 +91,7 @@ export default {
         if (res.status === 204) {
           alert('Participation successfully deleted');
         } else {
-          alert('Unable to Reset Participation! Error: ' + res.data);
+          alert('Unable to Reset Participation! Error: ' + res.data.error);
         }
       } catch (error) {
         console.error(error);
@@ -94,7 +104,7 @@ export default {
           alert('Questions successfully reseted');
           this.GetAllQuestions();
         } else {
-          alert('Unable to Reset Questions! Error: ' + res.data);
+          alert('Unable to Reset Questions! Error: ' + res.data.error);
         }
       } catch (error) {
         console.error(error);
@@ -107,17 +117,62 @@ export default {
           alert('Everything successfully deleted');
           this.questions = []
         } else {
-          alert('Unable to Reset Everything! Error: ' + res.data);
+          alert('Unable to Reset Everything! Error: ' + res.data.error);
         }
       } catch (error) {
         console.error(error);
       }
     },
-    editQuestion(index) {
+
+
+    async moveQuestionUp(question) {
+      let currentPosition = question.position;
+      question.position--;
+      try {
+        const res = await QuizApiService.editQuestion(currentPosition, question);
+        if (res.status === 204) {
+          alert('Question Moved Up');
+          this.GetAllQuestions();
+        } else {
+          alert('Unable to move question! Error: ' + res.data.error);
+          question.position++;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async moveQuestionDown(question) {
+      let currentPosition = question.position;
+      question.position++;
+      try {
+        const res = await QuizApiService.editQuestion(currentPosition, question);
+        if (res.status === 204) {
+          alert('Question Moved Down');
+          this.GetAllQuestions();
+        } else {
+          alert('Unable to move question! Error: ' + res.data.error);
+          question.position--;
+        }
+      } catch (error) {
+        console.error(error);
+        question.position--;
+      }
+    },
+    async editQuestion(question) {
       // Code pour éditer la question
     },
-    deleteQuestion(index) {
-      // Code pour supprimer la question
+    async deleteQuestion(question) {
+      try {
+        const res = await QuizApiService.deleteQuestion(question.position);
+        if (res.status === 204) {
+          alert('Question Deleted');
+          this.GetAllQuestions();
+        } else {
+          alert('Unable to delete question! Error: ' + res.data.error);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 };
@@ -127,13 +182,14 @@ export default {
 .question {
   display: flex;
   flex-direction: row;
-  height: 100px;
+  min-height: 100px;
   margin-bottom: 5px;
   border: 1px solid gray;
+  padding: 5px;
 }
 
 .question:nth-child(2n) {
-  background-color: lightgray;
+  background-color: lightcyan;
 }
 
 .question img {
@@ -150,16 +206,15 @@ export default {
 
 .question-card-text h2 {
   font-size: 15px;
-  height: 50px;
-  line-height: 50px;
+  height: 30px;
+  line-height: 30px;
   margin: 0;
 }
 
 .question-card-text p {
-  height: 50%;
+  height: 70%;
   font-size: 15px;
   margin: 0;
-  line-height: 50px;
 }
 
 .question-card-actions {
@@ -172,5 +227,16 @@ export default {
   height: 50%;
   width: 50px;
   overflow: hidden;
+  border: 0;
+  background-color: initial;
+  margin: 0;
+  padding: 5px;
+}
+
+.question-card-actions button img {
+  display: block;
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
 }
 </style>

@@ -43,6 +43,14 @@ export default {
     return this.call("post", "participations", iData);
   },
 
+  editQuestion(position, question) {
+    return this.call("put", "questions/" + position, question);
+  },
+
+  deleteQuestion(question) {
+    return this.call("delete", "questions/" + question);
+  },
+
 
   login(password) {
     return this.call("post", "login", password);
