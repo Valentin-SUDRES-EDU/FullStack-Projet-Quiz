@@ -54,4 +54,29 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  text-align: center;
+  margin-bottom: 20px;
+  height: 50px;
+  font-weight: bolder;
+  font-size: 25px;
+  line-height: 50px;
+}
+
+form input {
+  text-align: center;
+  font-weight: bolder;
+  font-size: 25px;
+  line-height: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  border: 1.5px solid rgba(13, 104, 152, 0.5);
+  border-radius: 40px;
+}
+</style>

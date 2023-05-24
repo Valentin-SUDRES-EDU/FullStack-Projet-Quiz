@@ -39,6 +39,28 @@ a,
   overflow: auto;
 }
 
+button {
+  width: 100%;
+  margin-bottom: 10px;
+  height: 50px;
+  border: none;
+  border-radius: 40px;
+
+  font-size: 18px;
+
+  color: white;
+  font-weight: bolder;
+
+  background: rgb(7, 7, 161);
+  background: linear-gradient(90deg, rgba(7, 7, 161, 0.5) 0%, rgba(13, 104, 152, 0.5) 48%, rgba(0, 142, 171, 0.5) 100%);
+}
+
+button:hover {
+  border: none;
+  background: rgb(161, 139, 7);
+  background: linear-gradient(-90deg, rgba(161, 139, 7, 0.5) 0%, rgba(0, 142, 171, 0.5) 100%);
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);

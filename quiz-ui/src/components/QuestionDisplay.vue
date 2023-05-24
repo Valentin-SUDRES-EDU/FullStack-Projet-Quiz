@@ -52,21 +52,4 @@ export default {
   max-height: 200px;
   margin-left: 50px;
 }
-
-.answers {
-  width: 100%;
-  margin-bottom: 10px;
-  height: 50px;
-  border: none;
-  border-radius: 40px;
-
-  background: rgb(7, 7, 161);
-  background: linear-gradient(90deg, rgba(7, 7, 161, 0.5) 0%, rgba(13, 104, 152, 0.5) 48%, rgba(0, 142, 171, 0.5) 100%);
-}
-
-.answers:hover {
-  border: none;
-  background: rgb(161, 139, 7);
-  background: linear-gradient(-90deg, rgba(161, 139, 7, 0.5) 0%, rgba(0, 142, 171, 0.5) 100%);
-}
 </style>
