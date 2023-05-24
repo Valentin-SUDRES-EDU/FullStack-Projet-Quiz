@@ -1,9 +1,8 @@
 <template>
   <main>
     <h1>Home</h1>
-    <router-link to="/start-new-quiz-page">Démarrer le quiz !</router-link>
-
-    <div class="content" v-if="this.registeredScores.length > 0">
+    <router-link id="startQuizz" to="/start-new-quiz-page">Démarrer le quiz !</router-link>
+    <div id="scores" class="content" v-if="this.registeredScores.length > 0">
       Les Meilleurs Scores
       <table>
         <tr>
@@ -45,6 +44,32 @@ export default {
 </script>
 
 <style>
+
+#startQuizz{
+  float: right;
+  width: 50%;
+  height: auto;
+  background: rgb(7,7,161);
+  background: linear-gradient(90deg, rgba(7,7,161,0.5) 0%, rgba(13,104,152,0.5) 48%, rgba(0,142,171,0.5) 100%);
+  border-radius: 15px;
+  text-align: center;
+  color: black;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+#startQuizz:hover {
+  background: rgb(161,139,7);
+  background: linear-gradient(-90deg, rgba(161,139,7,0.5) 0%, rgba(0,142,171,0.5) 100%);
+  -ms-transform: scale(1.10);
+  transform: scale(1.10);
+  color: white;
+}
+
+
+#scores {
+  float: left;
+}
 table {
   border: 2px solid black;
   border-collapse: collapse;
@@ -77,4 +102,6 @@ td {
   width: 100px;
   border: 1px solid black;
 }
+
+
 </style>

@@ -32,7 +32,8 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  /*color: var(--color-text);*/
+  color: rgb(238, 223, 149)
 }
 
 nav a.router-link-exact-active:hover {
@@ -41,13 +42,25 @@ nav a.router-link-exact-active:hover {
 
 nav a {
   display: inline-block;
+  color: white;
   padding: 0 1rem;
   border-left: 1px solid var(--color-border);
 }
 
+nav a:hover{
+  -ms-transform: scale(1.15);
+  transform: scale(1.15);
+  background-color: transparent;
+  color: rgb(239, 201, 14)
+}
+
+
 nav a:first-of-type {
   border: 0;
 }
+
+
+
 
 /*
 .logo {
