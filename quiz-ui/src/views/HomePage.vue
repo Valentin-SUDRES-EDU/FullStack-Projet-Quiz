@@ -2,8 +2,10 @@
   <main>
     <h1>Accueil</h1>
     <div>
-      <div>
-        <p>Ce quiz va vous faire voyager aux confins de l'univers. Êtes-vous prêt à voguer sur l'horizon des événements d'un trou noir super-massif ? Réussirez-vous à atteindre une lointaine lune glacée orbitant dans les anneaux d'une géante gazeuse ? Saurez-vous résoudre les plus grandes énigmes de l'astrophysique moderne ? </p>
+      <div class="rightContent">
+        <p>Ce quiz va vous faire voyager aux confins de l'univers. Êtes-vous prêt à voguer sur l'horizon des événements
+          d'un trou noir super-massif ? Réussirez-vous à atteindre une lointaine lune glacée orbitant dans les anneaux
+          d'une géante gazeuse ? Saurez-vous résoudre les plus grandes énigmes de l'astrophysique moderne ? </p>
         <router-link id="startQuizz" to="/start-new-quiz-page">Démarrer le quiz !</router-link>
       </div>
       <div>
@@ -54,10 +56,16 @@ export default {
 main div {
   display: flex;
   flex-direction: row-reverse;
+  justify-content: space-between;
 }
 
 main div div {
-  width: 50%
+  width: 47%
+}
+
+.rightContent {
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -91,7 +99,7 @@ a:hover {
 }
 
 #scores table {
-  
+
   border-collapse: collapse;
   text-align: center;
   margin: auto;
@@ -117,12 +125,12 @@ a:hover {
 
 
 #scores tr:nth-of-type(3) {
-  background-color: silver; 
+  background-color: silver;
 }
 
 #scores tr:nth-of-type(4) {
   background-color: rgb(212, 106, 0);
-} 
+}
 
 #scores th {
   font-weight: bold;
@@ -133,7 +141,6 @@ a:hover {
 #scores td {
   width: 100px;
   font-size: 20px;
-  
-}
 
+}
 </style>

@@ -25,6 +25,7 @@ p,
 span,
 label {
   color: black;
+  text-align: justify;
 }
 
 main {
