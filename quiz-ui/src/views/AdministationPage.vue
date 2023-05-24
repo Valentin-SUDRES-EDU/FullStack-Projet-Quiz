@@ -7,6 +7,8 @@
     </div>
     <div class="content" v-else>
       <h2>Manage Questions</h2>
+      <edit-question-modal v-if="questionToEdit" :question="questionToEdit" @save="saveQuestion"
+        @close="questionToEdit = null" />
       <div>
         <ul>
           <li draggable="true" v-for="(question, index) in this.questions" :key="index" class="question">
@@ -21,15 +23,6 @@
               <button draggable="false" @click="deleteQuestion(question)"><img draggable="false"
                   src="./../assets/img/Button_Erase.png" alt="delete question button"></button>
             </div>
-            <div draggable="false" class="question-card-actions">
-              <button v-if="index > 0" draggable="false" @click="moveQuestionUp(question)">
-                <img draggable="false" src="./../assets/img/Button_ArrowUp.png" alt="move question up button">
-              </button>
-              <button v-if="index < questions.length - 1" draggable="false" @click="moveQuestionDown(question)">
-                <img draggable="false" src="./../assets/img/Button_ArrowDown.png" alt="move question down button">
-              </button>
-            </div>
-
           </li>
         </ul>
       </div>
@@ -40,21 +33,77 @@
       <button @click="ResetEverything">Reset All</button>
     </div>
   </main>
+
+  <div v-if="questionToEdit" class="modal">
+    <div>
+      <h2>Modifier la Question {{ originalQuestion.position }}</h2>
+      <form @submit.prevent="submitForm" class="EditQuestionModal">
+        <h4>Question</h4>
+        <label>
+          <span>Titre</span>
+          <input type="text" v-model="questionToEdit.title">
+        </label>
+        <label>
+          <span>Texte</span>
+          <input type="text" v-model="questionToEdit.text">
+        </label>
+        <label>
+          <span>Image</span>
+          <input type="file" @change="handleFileUpload">
+        </label>
+        <label>
+          <span>Position</span>
+          <select v-model.number="questionToEdit.position">
+            <option v-for="n in 25" :key="n" :value="n">{{ n }}</option>
+          </select>
+        </label>
+        <h4>Réponses</h4>
+        <div class="answer" v-for="(answer, index) in questionToEdit.possibleAnswers" :key="index">
+          <label>
+            <span>Réponse {{ index + 1 }}</span>
+            <input type="radio" :value="index" v-model="correctAnswerIndex">
+            <input type="text" v-model="answer.text">
+          </label>
+        </div>
+        <div>
+          <button type="submit">Valider</button>
+          <button type="button" @click="close">Annuler</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
 import QuizApiService from "@/services/QuizApiService";
 
 export default {
+
   data() {
     return {
       password: '',
       authenticated: false,
       token: '',
-      questions: []
+      questions: [],
+      questionToEdit: null,
+      originalQuestion: null,
+      correctAnswerIndex: null
     }
   },
+
+  created() {
+    const token = window.sessionStorage.getItem('token');
+    if (token) {
+      this.token = token;
+      QuizApiService.token = this.token;
+      this.authenticated = true;
+      this.GetAllQuestions();
+    }
+  },
+
   methods: {
+
     async login() {
       try {
         const res = await QuizApiService.login({ "password": this.password });
@@ -64,6 +113,7 @@ export default {
           QuizApiService.token = this.token;
           this.GetAllQuestions();
 
+          window.sessionStorage.setItem('token', this.token);
         } else {
           alert('Invalid password');
         }
@@ -97,6 +147,7 @@ export default {
         console.error(error);
       }
     },
+
     async RevertQuestions() {
       try {
         const res = await QuizApiService.resetQuestions();
@@ -110,6 +161,7 @@ export default {
         console.error(error);
       }
     },
+
     async ResetEverything() {
       try {
         const res = await QuizApiService.resetEverything();
@@ -124,43 +176,40 @@ export default {
       }
     },
 
+    editQuestion(question) {
+      this.originalQuestion = question;
+      this.questionToEdit = JSON.parse(JSON.stringify(question));
+      this.correctAnswerIndex = question.possibleAnswers.findIndex(answer => answer.isCorrect);
+    },
 
-    async moveQuestionUp(question) {
-      let currentPosition = question.position;
-      question.position--;
-      try {
-        const res = await QuizApiService.editQuestion(currentPosition, question);
-        if (res.status === 204) {
-          alert('Question Moved Up');
-          this.GetAllQuestions();
-        } else {
-          alert('Unable to move question! Error: ' + res.data.error);
-          question.position++;
-        }
-      } catch (error) {
-        console.error(error);
+    handleFileUpload(e) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.questionToEdit.image = reader.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    async submitForm() {
+      this.questionToEdit.possibleAnswers.forEach((answer, index) => {
+        answer.isCorrect = (index === this.correctAnswerIndex);
+      });
+
+      const res = await QuizApiService.editQuestion(this.originalQuestion.position, this.questionToEdit);
+      if (res.status === 204) {
+        alert('Question Updated');
+        this.GetAllQuestions();
+      } else {
+        alert('Unable to update question! Error: ' + res.data.error);
       }
+      this.questionToEdit = null;
     },
-    async moveQuestionDown(question) {
-      let currentPosition = question.position;
-      question.position++;
-      try {
-        const res = await QuizApiService.editQuestion(currentPosition, question);
-        if (res.status === 204) {
-          alert('Question Moved Down');
-          this.GetAllQuestions();
-        } else {
-          alert('Unable to move question! Error: ' + res.data.error);
-          question.position--;
-        }
-      } catch (error) {
-        console.error(error);
-        question.position--;
-      }
+
+    close() {
+      this.questionToEdit = null;
     },
-    async editQuestion(question) {
-      // Code pour éditer la question
-    },
+
     async deleteQuestion(question) {
       try {
         const res = await QuizApiService.deleteQuestion(question.position);
@@ -195,6 +244,8 @@ export default {
 .question img {
   height: 100px;
   width: 100px;
+  margin-right: 5px;
+  object-fit: cover;
 }
 
 .question-card-text {
@@ -238,5 +289,74 @@ export default {
   margin: 0 auto;
   height: 100%;
   width: 100%;
+}
+
+.modal {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal>div {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.EditQuestionModal {
+  display: flex;
+  flex-direction: column;
+}
+
+.EditQuestionModal h4 {
+  margin-top: 15px;
+}
+
+.EditQuestionModal label {
+  width: 100%;
+  margin-bottom: 10px;
+  height: 30px;
+}
+
+.EditQuestionModal div {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.EditQuestionModal label span {
+  display: inline-block;
+  width: 30%;
+}
+
+.EditQuestionModal label input,
+.EditQuestionModal label select {
+  display: inline-block;
+  width: 60%;
+  height: 30px;
+}
+
+.answer label span {
+  display: inline-block;
+  width: 20%;
+}
+
+.answer label input:nth-child(2n) {
+  display: inline-block;
+  width: 10%;
+  height: 15px;
+}
+
+.answer label input:nth-child(3n) {
+  display: inline-block;
+  width: 60%;
 }
 </style>

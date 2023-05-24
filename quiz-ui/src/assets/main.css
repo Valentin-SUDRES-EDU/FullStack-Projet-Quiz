@@ -7,25 +7,21 @@
   width: 100%;
 
   font-weight: normal;
-
-  background: rgb(0, 0, 10);
-  background: linear-gradient(180deg, rgba(0, 0, 10, 1) 0%, rgba(0, 0, 150, 1) 100%);
 }
 
 h1 {
   font-size: 40px;
   font-weight: bolder;
   margin-bottom: 2vh;
-  color:rgb(0, 0, 140)
-
+  color: rgb(0, 0, 140)
 }
 
 main {
   margin: auto;
   background-color: white;
-  width: 80%;
+  width: 90%;
   min-height: 30vh;
-  max-height: 80vh;
+  max-height: 90vh;
   padding: 5vh;
   border-radius: 20px;
 }
@@ -39,7 +35,7 @@ a,
 
 .content {
   width: 100%;
-  max-height: 60vh;
+  max-height: 65vh;
   overflow: auto;
 }
 
@@ -49,20 +45,28 @@ a,
   }
 }
 
-@media (min-width: 1024px) {}
-
-
 @keyframes animateBg {
-  0%,100%
-  {
-      transform:scale(1);
+
+  0%,
+  100% {
+    transform: scale(1);
   }
-  50%
-  {
-      transform:scale(1.2);
+
+  50% {
+    transform: scale(1.2);
   }
 }
-span{
+
+.stars {
+  position: fixed;
+  top: 0;
+  z-index: -100;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 10, 1) 0%, rgba(0, 0, 150, 1) 100%);
+}
+
+.stars span {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -70,10 +74,11 @@ span{
   height: 4px;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 20px rgba(255, 255, 255, 1)  ;
-  animation:  animate 3s linear infinite;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 20px rgba(255, 255, 255, 1);
+  animation: animate 3s linear infinite;
 }
-span::before{
+
+.stars span::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -82,100 +87,102 @@ span::before{
   height: 1px;
   background: linear-gradient(90deg, #fff, transparent);
 }
+
 @keyframes animate {
-  0%
-  {
-      transform: rotate(315deg) translateX(0);
-      opacity: 1;
+  0% {
+    transform: rotate(315deg) translateX(0);
+    opacity: 1;
   }
-  70%
-  {
-      opacity: 1;
+
+  70% {
+    opacity: 1;
 
   }
-  100%
-  {
-      transform: rotate(315deg) translateX(-1500px);
-      opacity: 0;
+
+  100% {
+    transform: rotate(315deg) translateX(-1500px);
+    opacity: 0;
 
   }
-  
+
 }
-span:nth-child(1){
+
+.stars span:nth-child(1) {
   top: 0;
   right: 0;
-  left:initial;
-  animation-delay:0 ;
+  left: initial;
+  animation-delay: 0;
   animation-duration: 1s;
 }
 
-span:nth-child(2){
+.stars span:nth-child(2) {
   top: 0;
   right: 80px;
-  left:initial;
-  animation-delay:0.2s;
+  left: initial;
+  animation-delay: 0.2s;
   animation-duration: 3s;
 }
 
-span:nth-child(3){
+.stars span:nth-child(3) {
   top: 80px;
   right: 0px;
-  left:initial;
-  animation-delay:0.4s ;
+  left: initial;
+  animation-delay: 0.4s;
   animation-duration: 2s;
 }
 
-span:nth-child(4){
+.stars span:nth-child(4) {
   top: 0;
   right: 180px;
-  left:initial;
-  animation-delay:0.6s;
+  left: initial;
+  animation-delay: 0.6s;
   animation-duration: 1.5s;
 }
 
-span:nth-child(5){
+.stars span:nth-child(5) {
   top: 0;
   right: 400px;
-  left:initial;
-  animation-delay:0.8s;
+  left: initial;
+  animation-delay: 0.8s;
   animation-duration: 2.5s;
 }
 
-span:nth-child(6){
+.stars span:nth-child(6) {
   top: 0;
   right: 600px;
-  left:initial;
-  animation-delay:1s ;
+  left: initial;
+  animation-delay: 1s;
   animation-duration: 3s;
 }
-span:nth-child(7 ){
+
+.stars span:nth-child(7) {
   top: 300px;
   right: 0px;
-  left:initial;
-  animation-delay:1s ;
+  left: initial;
+  animation-delay: 1s;
   animation-duration: 1.75s;
 }
 
-span:nth-child(8){
+.stars span:nth-child(8) {
   top: 0px;
   right: 700px;
-  left:initial;
-  animation-delay:1.4s ;
+  left: initial;
+  animation-delay: 1.4s;
   animation-duration: 1.25s;
 }
 
-span:nth-child(9){
+.stars span:nth-child(9) {
   top: 0px;
   right: 1000px;
-  left:initial;
-  animation-delay:0.75s ;
+  left: initial;
+  animation-delay: 0.75s;
   animation-duration: 2.25s;
 }
 
-span:nth-child(10){
+.stars span:nth-child(10) {
   top: 0px;
   right: 1000px;
-  left:initial;
-  animation-delay:2.75s ;
+  left: initial;
+  animation-delay: 2.75s;
   animation-duration: 2.25s;
 }
