@@ -43,6 +43,9 @@ export default {
     return this.call("post", "participations", iData);
   },
 
+  addQuestion(question) {
+    return this.call("post", "questions", question);
+  },
   editQuestion(position, question) {
     return this.call("put", "questions/" + position, question);
   },

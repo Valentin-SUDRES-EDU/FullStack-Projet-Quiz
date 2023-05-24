@@ -29,6 +29,7 @@
           </li>
         </ul>
       </div>
+      <button @click="addQuestion">Ajouter une question</button>
 
       <h2>Gestion des Données</h2>
       <button @click="ResetParticipation">Supprimer les participations</button>
@@ -39,7 +40,8 @@
 
   <div v-if="questionToEdit" class="modal">
     <div>
-      <h2>Modifier la Question {{ originalQuestion.position }}</h2>
+      <h2 v-if="originalQuestion">Modifier la Question {{ originalQuestion.position }}</h2>
+      <h2 v-else>Ajouter une Question</h2>
       <form @submit.prevent="submitForm" class="EditQuestionModal">
         <h4>Question</h4>
         <label>
@@ -57,7 +59,8 @@
         <label>
           <span>Position</span>
           <select v-model.number="questionToEdit.position">
-            <option v-for="n in 25" :key="n" :value="n">{{ n }}</option>
+            <option v-for="n in (isAddingQuestion ? questions.length + 1 : questions.length)" :key="n" :value="n">{{ n }}
+            </option>
           </select>
         </label>
         <h4>Réponses</h4>
@@ -91,7 +94,8 @@ export default {
       questions: [],
       questionToEdit: null,
       originalQuestion: null,
-      correctAnswerIndex: null
+      correctAnswerIndex: null,
+      isAddingQuestion: false
     }
   },
 
@@ -179,7 +183,26 @@ export default {
       }
     },
 
+    addQuestion() {
+      this.isAddingQuestion = true;
+      this.originalQuestion = null;
+      this.questionToEdit = {
+        title: "",
+        text: "",
+        image: "",
+        position: this.questions.length + 1,
+        possibleAnswers: [
+          { text: "", isCorrect: false },
+          { text: "", isCorrect: false },
+          { text: "", isCorrect: false },
+          { text: "", isCorrect: false }
+        ]
+      };
+      this.correctAnswerIndex = null;
+    },
+
     editQuestion(question) {
+      this.isAddingQuestion = false;
       this.originalQuestion = question;
       this.questionToEdit = JSON.parse(JSON.stringify(question));
       this.correctAnswerIndex = question.possibleAnswers.findIndex(answer => answer.isCorrect);
@@ -199,18 +222,27 @@ export default {
         answer.isCorrect = (index === this.correctAnswerIndex);
       });
 
-      const res = await QuizApiService.editQuestion(this.originalQuestion.position, this.questionToEdit);
-      if (res.status === 204) {
-        alert('Question Updated');
+      let res;
+      if (this.originalQuestion) {
+        res = await QuizApiService.editQuestion(this.originalQuestion.position, this.questionToEdit);
+      } else {
+        res = await QuizApiService.addQuestion(this.questionToEdit);
+      }
+
+      if (res.status === 200 || res.status === 204) {
+        alert(this.originalQuestion ? 'Question Updated' : 'Question Created');
+        this.close();
         this.GetAllQuestions();
       } else {
-        alert('Unable to update question! Error: ' + res.data.error);
+        alert('Unable to update or create question! Error: ' + res.data.error);
       }
-      this.questionToEdit = null;
+      this.isAddingQuestion = false;
     },
+
 
     close() {
       this.questionToEdit = null;
+      this.isAddingQuestion = false;
     },
 
     async deleteQuestion(question) {
@@ -237,7 +269,7 @@ h2 {
 
 .questionList {
   overflow: auto;
-  max-height: 40vh;
+  max-height: 30vh;
 }
 
 .question {
